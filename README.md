@@ -1,9 +1,10 @@
-# S2S_challenge
-This repository contains the main code of my participation with the BSC team to the subseasonal to seasonal challenge. All the information about this challenge can be found at: https://s2s-ai-challenge.github.io/
+# BSC contribution to WMO S2S AI Challenge
 
-All the codes and datasets can be find at: https://renkulab.io/gitlab/lluis.palma/s2s-ai-challenge-bsc
-## Rewards
-Our model got the second position of the challenge and a paper was published in the BAMS magazine where the top 3 ranked explain their model.
+The main code is in the notebook BSC_contribution.ipynb (open with jupyterlab or similar).
 
-You can read the paper here: https://journals.ametsoc.org/view/journals/bams/103/12/BAMS-D-22-0046.1.xml
+Additional functions are in the utils.py file.
+
+
+
+
 
