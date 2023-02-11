@@ -1,0 +1,97 @@
+plugins:
+  source:
+    - module: intake_xarray
+
+sources:
+  training-input:
+    description: S2S hindcasts from IRIDL regridded to 1.5 deg grid and aggregated by mean over lead, https://iridl.ldeo.columbia.edu/SOURCES/.ECMWF/.S2S/overview.html
+    driver: opendap
+    parameters:
+      center:
+        description: name of the center issuing the hindcast
+        type: str
+        default: ECMF
+        allowed: [BOM, CNRM, ECCC, ECMF, HMCR, ISAC, JMA, KMA, NCEP, UKMO]
+      grid:
+        description: regrid to this global resolution
+        type: float
+        default: 1.5
+      lead_name:
+        description: name of the lead_time dimension
+        type: str
+        default: LA
+        allowed: [LA, L]
+      lead_start:
+        description: aggregation start lead passed to RANGEEDGES
+        type: int
+        default: 14
+      lead_end:
+        description: aggregation end lead passed to RANGEEDGES
+        type: int
+        default: 27
+      experiment_type:
+        description: type of experiment
+        type: str
+        default: perturbed
+        allowed: [control, perturbed, RMMS]
+      group:
+        description: group of variables
+        type: str
+        default: 2m_above_ground
+        #allowed: [2m_above_ground, ...] see https://iridl.ldeo.columbia.edu/SOURCES/.ECMWF/.S2S/.ECMF/.reforecast/.perturbed/
+      param:
+        description: variable name
+        type: str
+        default: 2t
+        #allowed: [2t] see https://iridl.ldeo.columbia.edu/SOURCES/.ECMWF/.S2S/.ECMF/.reforecast/.perturbed/
+    xarray_kwargs:
+        engine: netcdf4
+    args:
+      urlpath: http://iridl.ldeo.columbia.edu/SOURCES/.ECMWF/.S2S/.{{center}}/.reforecast/.{{experiment_type}}/.{{group}}/{{param}}/{{lead_name}}/({{lead_start}})/({{lead_end}})/RANGEEDGES/[{{lead_name}}]average/X/0/{{grid}}/358.5/GRID/Y/90/{{grid}}/-90/GRID/dods
+
+
+  test-input:
+    description: S2S forecasts from IRIDL regridded to 1.5 deg grid and aggregated by mean over lead, https://iridl.ldeo.columbia.edu/SOURCES/.ECMWF/.S2S/overview.html
+    driver: opendap
+    parameters:
+      center:
+        description: name of the center issuing the hindcast
+        type: str
+        default: ECMF
+        allowed: ['BOM','CNRM','ECCC','ECMF','HMCR','ISAC','JMA','KMA','NCEP','UKMO']
+      grid:
+        description: regrid to this global resolution
+        type: float
+        default: 1.5
+      lead_name:
+        description: name of the lead_time dimension
+        type: str
+        default: LA
+        allowed: [LA, L, L1]
+      lead_start:
+        description: aggregation start lead passed to RANGEEDGES
+        type: int
+        default: 14
+      lead_end:
+        description: aggregation end lead passed to RANGEEDGES
+        type: int
+        default: 27
+      experiment_type:
+        description: type of experiment
+        type: str
+        default: perturbed
+        allowed: [control, perturbed, RMMS]
+      group:
+        description: group of variables
+        type: str
+        default: 2m_above_ground
+        #allowed: see https://iridl.ldeo.columbia.edu/SOURCES/.ECMWF/.S2S/.ECMF/.reforecast/.perturbed/
+      param:
+        description: variable name
+        type: str
+        default: 2t
+        #allowed: [2t] see https://iridl.ldeo.columbia.edu/SOURCES/.ECMWF/.S2S/.ECMF/.reforecast/.perturbed/
+    xarray_kwargs:
+        engine: netcdf4
+    args:
+        urlpath: http://iridl.ldeo.columbia.edu/SOURCES/.ECMWF/.S2S/.{{center}}/.forecast/.{{experiment_type}}/.{{group}}/{{param}}/S/(0000%201%20Jan%202020)/(0000%2031%20Dec%202020)/RANGEEDGES/{{lead_name}}/({{lead_start}})/({{lead_end}})/RANGEEDGES/[{{lead_name}}]average/X/0/{{grid}}/358.5/GRID/Y/90/{{grid}}/-90/GRID/dods 

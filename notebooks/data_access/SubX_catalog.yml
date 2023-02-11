@@ -1,0 +1,76 @@
+plugins:
+  source:
+    - module: intake_xarray
+
+sources:
+  training-input:
+    description: SubX hindcasts from IRIDL regridded to 1.5 deg grid and aggregated by mean over lead, http://iridl.ldeo.columbia.edu/SOURCES/.Models/.SubX/outline.html
+    driver: opendap
+    parameters:
+      center:
+        description: name of the center issuing the hindcast
+        type: str
+        default: EMC
+        allowed: [CESM, ECCC, EMC, ESRL, GMAO, NCEP, NRL, RSMAS]
+      model:
+        description: name of the model
+        type: str
+        default: GEFS
+        allowed: [30LCESM1, 46LCESM1, GEM, GEPS6, GEPS5, GEFS, GEFSv12, FIMr1p1, GEOS_V2p1, CFSv2, NESM, CCSM4]
+      grid:
+        description: regrid to this global resolution
+        type: float
+        default: 1.5
+      lead_start:
+        description: aggregation start lead passed to RANGEEDGES
+        type: int
+        default: 14
+      lead_end:
+        description: aggregation end lead passed to RANGEEDGES
+        type: int
+        default: 27        
+      param:
+        description: variable name
+        type: str
+        default: pr
+        #allowed: [pr]
+    xarray_kwargs:
+        engine: netcdf4
+    args:
+      urlpath: http://iridl.ldeo.columbia.edu/SOURCES/.Models/.SubX/.{{center}}/.{{model}}/.hindcast/.{{param}}/L/({{lead_start}})/({{lead_end}})/RANGEEDGES/[L]average/X/0/{{grid}}/358.5/GRID/Y/90/{{grid}}/-90/GRID/dods
+
+  test-input:
+    description: SubX forecasts from IRIDL regridded to 1.5 deg grid and aggregated by mean over lead, http://iridl.ldeo.columbia.edu/SOURCES/.Models/.SubX/outline.html
+    driver: opendap
+    parameters:
+      center:
+        description: name of the center issuing the forecast
+        type: str
+        default: EMC
+        allowed: [CESM, ECCC, EMC, ESRL, GMAO, NCEP, NRL, RSMAS]
+      model:
+        description: name of the model
+        type: str
+        default: GEFS
+        allowed: [30LCESM1, 46LCESM1, GEM, GEPS6, GEPS5, GEFS, GEFSv12, FIMr1p1, GEOS_V2p1, CFSv2, NESM, CCSM4]
+      grid:
+        description: regrid to this global resolution
+        type: float
+        default: 1.5
+      lead_start:
+        description: aggregation start lead passed to RANGEEDGES
+        type: int
+        default: 14
+      lead_end:
+        description: aggregation end lead passed to RANGEEDGES
+        type: int
+        default: 27        
+      param:
+        description: variable name, see http://iridl.ldeo.columbia.edu/SOURCES/.Models/.SubX/outline.html
+        type: str
+        default: pr
+        #allowed: [pr] 
+    xarray_kwargs:
+        engine: netcdf4
+    args:
+        urlpath: http://iridl.ldeo.columbia.edu/SOURCES/.Models/.SubX/.{{center}}/.{{model}}/.forecast/.{{param}}/S/(0000%201%20Jan%202020)/(0000%2031%20Dec%202020)/RANGEEDGES/L/({{lead_start}})/({{lead_end}})/RANGEEDGES/[L]average/X/0/{{grid}}/358.5/GRID/Y/90/{{grid}}/-90/GRID/dods

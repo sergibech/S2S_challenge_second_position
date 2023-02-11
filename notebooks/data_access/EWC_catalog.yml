@@ -1,0 +1,122 @@
+plugins:
+  source:
+    - module: intake_xarray
+
+sources:
+  training-input:
+    description: climetlab name in AI/ML community naming for hindcasts as input to the ML-model in training period
+    driver: netcdf
+    parameters:
+      model:
+        description: name of the S2S model
+        type: str
+        default: ecmwf
+        allowed: [ecmwf, eccc, ncep]
+      param:
+        description: variable name
+        type: str
+        default: tp
+        allowed: [t2m, ci, gh, lsm, msl, q, rsn, sm100, sm20, sp, sst, st100, st20, t, tcc, tcw, ttr, tp, v, u]
+      date:
+        description: initialization weekly thursdays
+        type: datetime
+        default: 2020.01.02
+        min: 2020.01.02
+        max: 2020.12.31
+      version:
+        description: versioning of the data
+        type: str
+        default: 0.3.0
+      format:
+        description: data type
+        type: str
+        default: netcdf
+        allowed: [netcdf, grib]
+      ending:
+        description: data format compatible with format; netcdf -> nc, grib -> grib
+        type: str
+        default: nc
+        allowed: [nc, grib]
+    xarray_kwargs:
+        engine: h5netcdf
+    args: # add simplecache:: for caching: https://filesystem-spec.readthedocs.io/en/latest/features.html#caching-files-locally
+      urlpath: https://storage.ecmwf.europeanweather.cloud/s2s-ai-challenge/data/training-input/{{version}}/{{format}}/{{model}}-hindcast-{{param}}-{{date.strftime("%Y%m%d")}}.{{ending}}
+
+  test-input:
+    description: climetlab name in AI/ML community naming for 2020 forecasts as input to ML model in test period 2020
+    driver: netcdf
+    parameters:
+      model:
+        description: name of the S2S model
+        type: str
+        default: ecmwf
+        allowed: [ecmwf, eccc, ncep]
+      param:
+        description: variable name
+        type: str
+        default: tp
+        allowed: [t2m, ci, gh, lsm, msl, q, rsn, sm100, sm20, sp, sst, st100, st20, t, tcc, tcw, ttr, tp, v, u]
+      date:
+        description: initialization weekly thursdays
+        type: datetime
+        default: 2020.01.02
+        min: 2020.01.02
+        max: 2020.12.31
+      version:
+        description: versioning of the data
+        type: str
+        default: 0.3.0
+      format:
+        description: data type
+        type: str
+        default: netcdf
+        allowed: [netcdf, grib]
+      ending:
+        description: data format compatible with format; netcdf -> nc, grib -> grib
+        type: str
+        default: nc
+        allowed: [nc, grib]
+    xarray_kwargs:
+        engine: h5netcdf
+    args: # add simplecache:: for caching: https://filesystem-spec.readthedocs.io/en/latest/features.html#caching-files-locally
+      urlpath: https://storage.ecmwf.europeanweather.cloud/s2s-ai-challenge/data/test-input/{{version}}/{{format}}/{{model}}-forecast-{{param}}-{{date.strftime("%Y%m%d")}}.{{ending}}
+
+  training-output-reference:
+    description: climetlab name in AI/ML community naming for 2020 forecasts as output reference to compare to ML model output to in training period
+    driver: netcdf
+    parameters:
+      param:
+        description: variable name
+        type: str
+        default: tp
+        allowed: [t2m, tp]
+      date:
+        description: initialization weekly thursdays
+        type: datetime
+        default: 2020.01.02
+        min: 2020.01.02
+        max: 2020.12.31
+    xarray_kwargs:
+        engine: h5netcdf
+    args: # add simplecache:: for caching: https://filesystem-spec.readthedocs.io/en/latest/features.html#caching-files-locally
+      urlpath: https://storage.ecmwf.europeanweather.cloud/s2s-ai-challenge/data/test-output-reference/{{param}}-{{date.strftime("%Y%m%d")}}.nc
+            
+  test-output-reference:
+    description: climetlab name in AI/ML community naming for 2020 forecasts as output reference to compare to ML model output to in test period 2020
+    driver: netcdf
+    parameters:
+      param:
+        description: variable name
+        type: str
+        default: tp
+        allowed: [t2m, tp]
+      date:
+        description: initialization weekly thursdays
+        type: datetime
+        default: 2020.01.02
+        min: 2020.01.02
+        max: 2020.12.31
+    xarray_kwargs:
+        engine: h5netcdf
+    args: # add simplecache:: for caching: https://filesystem-spec.readthedocs.io/en/latest/features.html#caching-files-locally
+      urlpath: https://storage.ecmwf.europeanweather.cloud/s2s-ai-challenge/data/test-output-reference/{{param}}-{{date.strftime("%Y%m%d")}}.nc
